@@ -1,0 +1,106 @@
+{
+    "info": {
+        "name": "multiTRAR_SA_text_guide_order0123_batch32_TRAT_layer1_trarlr1e-5_routing_avg_hardrouting_len100_without_vit",
+        "log": {
+            "name": ""
+        },
+        "device": [
+            4
+        ],
+        "test_on_checkpoint": "none",
+        "train_on_checkpoint": "none",
+        "repository":5
+    },
+    "opt": {
+        "seed": 1234,
+        "dataloader": {
+            "requires": {
+                "tokenizer_roberta": {}
+            },
+            "loaders": {
+                "text": {
+                    "data_path": "input/Twitter/",
+                    "len": 100,
+                    "pad": 1
+                },
+                "fasterrcnn": {
+                    "data_path": "input/Twitter/",
+                    "boxfeature_path": "input/Twitter/image_feature/"
+                },
+                "label": {
+                    "data_path": "input/Twitter/",
+                    "test_label": true
+                }
+            },
+            "batch_size": 8,
+            "pin_memory": true,
+            "num_workers": 8,
+            "shuffle": true,
+            "drop_last": true
+        },
+        "mode": [
+            "train",
+            "valid",
+            "test"
+        ],
+        "checkpoint_step": 50,
+        "lr_decay_list": [
+            20,
+            25,
+            30
+        ],
+        "lr_decay_r": 0.8,
+        "modelopt": {
+            "name": "multiTRAR_SA_fasterrcnn",
+            "input1": "text",
+            "input2": "fasterrcnn",
+            "input3": "text_mask",
+            "layer": 1,
+            "tau_max": 10,
+            "ORDERS": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "IMG_SCALE": 7,
+            "dropout": 0.5,
+            "hidden_size": 768,
+            "ffn_size": 768,
+            "multihead": 4,
+            "routing": "hard",
+            "BINARIZE": false,
+            "len": 100,
+            "glimpses": 1,
+            "mlp_size": 768,
+            "output_size": 768,
+            "backbone": "text_guide",
+            "orders": 4,
+            "pooling": "avg",
+            "classifier": "both",
+            "roberta_layer": 1,
+            "vitmodel": "vit_base_patch32_224"
+        },
+        "optimizeropt": {
+            "name": "Adam",
+            "lr": 0.0001,
+            "weight_decay": 0.01,
+            "params": {
+                "bertl_text": {
+                    "lr": 3e-07
+                },
+                "trar": {
+                    "lr": 1e-05,
+                    "weight_decay": 0.01
+                },
+                "classifier": {}
+            }
+        },
+        "lossopt": {
+            "name": "CrossEntropyLoss"
+        },
+        "total_epoch": 20,
+        "frequency": 4,
+        "clip": 1
+    }
+}
